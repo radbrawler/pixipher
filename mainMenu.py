@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.filedialog import askopenfilename
 from imread import imread
 from matplotlib import pylab as plt
+import sender
 from PIL import Image, ImageTk
 
 
@@ -13,39 +14,21 @@ class Window(Frame):
         self.initWindow()
 
     def initWindow(self):
-        # changing the title of our master widget
         self.master.title("Pixipher")
-
-        # allowing the widget to take the full space of the root window
         self.pack(fill=BOTH, expand=1)
-
-        # creating a menu instance
         menu = Menu(self.master)
         self.master.config(menu=menu)
 
-        # create the file object)
-        file = Menu(menu)
-
-        # adds a command to the menu option, calling it exit, and the
-        # command it runs on event is client_exit
+        file = Menu(menu)  # File Menu
         file.add_command(label="Exit", command=self.clientExit)
-
-        #added "file" to our menu
         menu.add_cascade(label="File", menu=file)
 
-        # create the file object
-        edit = Menu(menu)
-
-        # adds a command to the menu option, calling it exit, and the
-        # command it runs on event is client_exit
+        edit = Menu(menu)  # Edit Menu
         edit.add_command(label="Show Img", command=self.openImage)
-        # edit.add_command(label="Show Text", command=self.showText)
-
-        # added "file" to our menu
         menu.add_cascade(label="Edit", menu=edit)
 
-        connect = Menu(menu)
-        connect.add_command(label="Listen", command="")
+        connect = Menu(menu)  # Connect Menu
+        connect.add_command(label="Listen", command=sender.Sender("localhost", 9125).open_connection())
         connect.add_command(label="Broadcast", command="")
         menu.add_cascade(label="Connect", menu=connect)
 
