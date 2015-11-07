@@ -1,9 +1,10 @@
 from tkinter import *
 from tkinter.filedialog import askopenfilename
-from imread import imread
-from matplotlib import pylab as plt
-import sender
+
 from PIL import Image, ImageTk
+
+import sender
+import client
 
 
 class Window(Frame):
@@ -28,9 +29,17 @@ class Window(Frame):
         menu.add_cascade(label="Edit", menu=edit)
 
         connect = Menu(menu)  # Connect Menu
-        connect.add_command(label="Listen", command=sender.Sender("localhost", 9125).open_connection())
-        connect.add_command(label="Broadcast", command="")
+        connect.add_command(label="Open Connection", command=self.ope)
+        connect.add_command(label="Establish Connection", command=self.con)
         menu.add_cascade(label="Connect", menu=connect)
+
+    @staticmethod
+    def ope():
+        sender.Sender("127.0.0.1", 9125).open_connection()
+
+    @staticmethod
+    def con():
+        client.Client("127.0.0.1", 9125).connect()
 
     def openImage(self):
         print("Opening File")
@@ -42,7 +51,6 @@ class Window(Frame):
         image = Image.open(filename1)
         image.thumbnail(size, Image.ANTIALIAS)
         render = ImageTk.PhotoImage(image)
-
 
         img = Label(self, image=render)
         img.image = render

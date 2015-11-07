@@ -1,5 +1,10 @@
+# Ignore these files
 *.xml
 *.config
 *.jpg
+
+# This being specific
 browse.py
+
+# Ignoring idea files
 .idea
