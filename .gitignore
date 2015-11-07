@@ -2,3 +2,4 @@
 *.config
 *.jpg
 browse.py
+.idea
