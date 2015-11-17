@@ -37,9 +37,20 @@ class MainWindow(Frame):
         self.connect.add_command(label="Establish Connection", command=self.con)
         self.menu.add_cascade(label="Connect", menu=self.connect)
 
+        self.send = Menu(self.menu)  # Send Menu
+        self.connect.add_command(label="Send Image", command=self.send)
+        self.connect.add_command(label="Receive Image", command=self.rec)
+        self.menu.add_cascade(label="Send", menu=self.connect)
+
     @staticmethod
     def init_window():
         print(" Initialising Main Window")
+
+    def send(self):
+        sender.Sender.send_image(self.filename)
+
+    def rec(self):
+        client.Client.recv_image()
 
     @staticmethod
     def open():
