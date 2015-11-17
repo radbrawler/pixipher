@@ -16,3 +16,5 @@ class Sender:
         print("Listening ....")
         clientSocket, clientAddress = senderSocket.accept()
         print("Connected to - ", clientSocket, clientAddress)
+
+    def send_image(self, image):

@@ -1,3 +1,7 @@
 imread
 matplotlib
 pillow
+Crypto
+numpy
+scipy
+oct2py

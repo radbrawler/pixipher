@@ -2,9 +2,15 @@
 *.xml
 *.config
 *.jpg
+*.png
+*.c
+*.out
+*.m
 
 # This being specific
 browse.py
+enableMenu.py
+fileReader.c
 
 # Ignoring idea files
 .idea
