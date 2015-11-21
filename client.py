@@ -24,3 +24,4 @@ class Client:
             l = self.clientsocket.recv(1024)
         f.close()
         print("Done Receiving .. ")
+        imshow(l)

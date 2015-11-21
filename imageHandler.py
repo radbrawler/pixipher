@@ -3,8 +3,6 @@ from tkinter import *
 
 from PIL import Image, ImageTk
 
-import mainWindow
-
 
 class ImageHandler:
     def __init__(self, window, filename, sizex=300, sizey=300):
@@ -18,7 +16,7 @@ class ImageHandler:
 
         print("Opened File: " + self.filename)
         self.showImage()
-        mainWindow.MainWindow.enable_encryption(self.window)
+        #mainWindow.MainWindow.enable_encryption(self.window)
         return self.filename
 
     def showImage(self):

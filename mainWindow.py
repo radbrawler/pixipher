@@ -30,7 +30,7 @@ class MainWindow(Frame):
         self.preferences.add_command(label="Decrypt Document", command="")
         self.preferences.add_command(label="Set Parameters", command="")
         self.menu.add_cascade(label="Preferences", menu=self.preferences)
-        self.disable_preferences()
+        #self.disable_preferences()
 
         self.connect = Menu(self.menu)  # Connect Menu
         self.connect.add_command(label="Open Connection", command=self.open)
@@ -38,9 +38,9 @@ class MainWindow(Frame):
         self.menu.add_cascade(label="Connect", menu=self.connect)
 
         self.send = Menu(self.menu)  # Send Menu
-        self.connect.add_command(label="Send Image", command=self.send)
-        self.connect.add_command(label="Receive Image", command=self.rec)
-        self.menu.add_cascade(label="Send", menu=self.connect)
+        self.send.add_command(label="Send Image", command=self.send)
+        self.send.add_command(label="Receive Image", command=self.rec)
+        self.menu.add_cascade(label="Send", menu=self.send)
 
     @staticmethod
     def init_window():
