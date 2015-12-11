@@ -13,12 +13,13 @@ class MainWindow(Frame):
         self.master = master
         self.filename = None
 
-        self.master.title("Pixipher")
+        self.master.title("Pixipher v1.0")
         self.pack(fill=BOTH, expand=1)
         self.menu = Menu(self.master)
         self.master.config(menu=self.menu)
 
-        self.file = Menu(self.menu)  # File Menu
+        # File Menu
+        self.file = Menu(self.menu)
         self.file.add_command(label="Open", command=imageHandler.ImageHandler(root, self.filename).openImageDialog)
         # file.add_command(label="Open", command=self.openImage)
         self.file.add_command(label="Save As", command=self.save_image())
@@ -26,8 +27,8 @@ class MainWindow(Frame):
         self.menu.add_cascade(label="File", menu=self.file)
 
         self.preferences = Menu(self.menu)  # Edit Menu
-        self.preferences.add_command(label="Encrypt Document", command=encryption.Encryption)
-        self.preferences.add_command(label="Decrypt Document", command="")
+        self.preferences.add_command(label="Encrypt Image", command=encryption.Encryption)
+        self.preferences.add_command(label="Decrypt Image", command="")
         self.preferences.add_command(label="Set Parameters", command="")
         self.menu.add_cascade(label="Preferences", menu=self.preferences)
         #self.disable_preferences()
@@ -41,6 +42,18 @@ class MainWindow(Frame):
         self.send.add_command(label="Send Image", command=self.send)
         self.send.add_command(label="Receive Image", command=self.rec)
         self.menu.add_cascade(label="Send", menu=self.send)
+
+        if self.filename is None:
+            self.menu.entryconfig("Preferences", state="normal")
+            print("Menu Disabled")
+        else:
+            self.menu.entryconfig("Preferences", state="normal")
+            print("Menu Enabled")
+
+        # ***** Status Bar *****
+        self.status = Label(self, text=" Status Bar", bd=2, relief=SUNKEN, anchor=E)
+        self.status.pack(side=BOTTOM, fill=X)
+
 
     @staticmethod
     def init_window():
@@ -68,14 +81,15 @@ class MainWindow(Frame):
     def client_exit():
         exit()
 
-    def enable_encryption(self):
-        self.menu.entryconfig("Preferences", state="normal")
+    # def enable_encryption(self):
 
-    def disable_preferences(self):
-        self.menu.entryconfig("Preferences", state="disabled")
+    # def disable_preferences(self):
+
 
 if __name__ == "__main__":
     root = Tk()
+    logo = PhotoImage(file='icon4.png')
+    root.tk.call('wm', 'iconphoto', root._w, logo)
     root.geometry("800x400")
     print("In Main Loop")
     app = MainWindow(root)

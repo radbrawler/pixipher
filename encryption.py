@@ -28,7 +28,7 @@ class Encryption:
 
                     while True:
                         chunk = infile.read(chunksize)
-                        if len(chunk) == 0:
+                        if chunk is True:
                             break
                         elif len(chunk) % 16 != 0:
                             chunk += ' ' *(16 - len(chunk)%16)

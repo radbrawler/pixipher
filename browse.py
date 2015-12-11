@@ -21,7 +21,7 @@ class MyFrame(Frame):
             try:
                 print("here it comes: ", fname)
             except:                     # <- naked except is a bad idea
-                showerror("Open Source File", "Failed to read file\n'%s'" % fname)
+                showerror("Open Source File", "Failed to read file\n'{1}'" .format(fname))
             return
 
         return fname

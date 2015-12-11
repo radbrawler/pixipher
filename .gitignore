@@ -14,3 +14,5 @@ fileReader.c
 
 # Ignoring idea files
 .idea
+
+!icon4.png
