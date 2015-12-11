@@ -1,5 +1,5 @@
 # pixipher
-Simple Tkinter(python) based application for image encryption. 
+Simple pyTk based application for image encryption. 
 
 # Requirements
 python3.4
