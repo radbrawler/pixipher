@@ -5,3 +5,5 @@ Crypto
 numpy
 scipy
 oct2py
+PIL
+cv2
