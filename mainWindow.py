@@ -33,7 +33,7 @@ class MainWindow(Frame):
 
         self.preferences = Menu(self.menu)  # Edit Menu
         self.preferences.add_command(label="Encrypt Image",
-                                     command=lambda: encryption.Encryption(self.filename).encryption())
+                                     command=lambda: encryption.Encryption(self.filename).encrypt_file())
         self.preferences.add_command(label="Decrypt Image", command="")
         self.preferences.add_command(label="Set Parameters", command="")
         self.menu.add_cascade(label="Preferences", menu=self.preferences)

@@ -2,7 +2,7 @@
 *.xml
 *.config
 *.jpg
-*.png
+*.png*
 *.c
 *.out
 *.m
