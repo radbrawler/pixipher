@@ -11,6 +11,7 @@
 browse.py
 enableMenu.py
 fileReader.c
+matlabconversion.py
 
 # Ignoring idea files
 .idea
