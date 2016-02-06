@@ -1,38 +1,68 @@
 import hashlib
 
 from PIL import Image
-import numpy as np
 
 
 class Encryption:
-    def __init__(self, filename, key="image_encryption".encode('utf-8')):
+    def __init__(self, filename, outfile="out.png", key="image_encryption".encode('utf-8'), iteration=1):
         self.filename = filename
         self.key = hashlib.sha256(key).digest()
-        print("File opened for encryption is ", self.filename)
-        self.outfile = self.filename + '.enc'
+        # print("File opened for encryption is ", self.filename)
+        if outfile != "out.png":
+            self.outfile = outfile
+        else:
+            self.outfile = self.filename
+        self.iteration = iteration
 
     def encrypt_file(self):
         try:
             image = Image.open(self.filename)
             image_out = Image.new(image.mode, image.size, None)
-            print(image.mode)
 
             if image.mode == 'L':
-                im2 = image.crop((0, 0, 200, 200))
-                im2.show()
-                pixels = self.encrypter(im2, im2.size, image.mode)
-                image_out.paste(pixels)
+                im2 = image.crop((0, 0, image.size[0], image.size[1]))
+                # pixels = im2.load()
+                # print("Here ", pixels)
+                # image.show()
+                # print(type(pixels))  # pixel <class 'PixelAccess'>
+
+                # for k in range(4, 5):
+                #     for j in range(im2.size[1]):
+                #         print('{0:3d}'.format(pixels[k, j]), end=' ')
+                #     print(end='\n')
+
+                for i in range(self.iteration):
+                    print(i)
+                    im2 = self.encrypter(im2, im2.size, im2.mode)
+                    # print(pixels)
+
+                    # image_out.paste(pixels)
+
+                # print("############################################################")
+                # time.sleep(4)
+                # for k in range(4, 5):
+                #     for j in range(im2.size[1]):
+                #         print('{0:3d}'.format(pixels[k, j]), end=' ')
+                #     print(end='\n')
+
                 im2.save(self.outfile, 'png')
                 im2.show()
 
             elif image.mode == 'RGB':
-                im_rgb = image.crop((0, 0, 100, 100))
-                im_rgb.show()
-                red, green, blue = self.encrypter(im_rgb, im_rgb.size, im_rgb.mode)
-                print(type(im_rgb))
-                im_rgb = Image.merge(im_rgb.mode, [red, green, blue])
+                im_rgb = image.crop((0, 0, image.size[0], image.size[1]))
+                hist = im_rgb.histogram()
+                # print("Original image histogram ", hist)
+                # im_rgb.show()
+                for i in range(self.iteration):
+                    print(i)
+                    red, green, blue = self.encrypter(im_rgb, im_rgb.size, im_rgb.mode)
+                    im_rgb = Image.merge(im_rgb.mode, [red, green, blue])
+
                 im_rgb.save(self.outfile, 'png')
-                im_rgb.show()
+                # print(type(im_rgb))
+                # im_rgb.show()
+                hist = im_rgb.histogram()
+                # print("Scrambled image histogram", hist)
 
             else:
                 print("Image is neither \'L\' or \'RGB\'")
@@ -41,46 +71,60 @@ class Encryption:
             print("File Name not Found", e)
 
     def encrypter(self, c_image, size, mode):  # c_image->cropped image
-        list1 = c_image.load()
-        p, q = 1, 1
-        arnold = ([1, p], [q, p*q+1])
+
+        # c_image_new = Image.new(c_image.mode, c_image.size, None)
+        # list2 = c_image_new.load()
+        # print("list is ", type(list2))
 
         if mode == 'L':
             try:
+                list1 = c_image.load()
+                c_image_new = Image.new(c_image.mode, c_image.size, None)
+                list2 = c_image_new.load()
                 for x in range(size[0]):
                     for y in range(size[1]):
-                        x2 = np.dot([x, y], arnold) % size[0]
-                        list1[x, y] += 100
+                        xn = ((2*x)+y) % size[0]
+                        yn = (x+y) % size[1]
+                        list2[x, y] = list1[xn, yn]
 
-                return list1
+                # print(list2[x, y], list1[x, y])
+                # for k in range(4, 5):
+                #     for j in range(c_image.size[1]):
+                #         print('{0:3d}'.format(list2[k, j]), end=' ')
+                #     print(end='\n')
+
+                return c_image_new
 
             except TypeError:
                 print("Caught TypeError !! Image may be 3-channel")
 
         elif mode == 'RGB':
             try:
-                red1, green1, blue1 = red, green, blue = c_image.split()
+                red, green, blue = c_image.split()
                 r = red.load()
                 g = green.load()
                 b = blue.load()
+                c_image_new = Image.new(c_image.mode, c_image.size, None)
+                red1, green1, blue1 = c_image_new.split()
                 r1 = red1.load()
                 g1 = green1.load()
                 b1 = blue1.load()
 
                 for x in range(size[0]):
                     for y in range(size[1]):
-                        x2 = np.dot([x+1, y+1], arnold) % size[0]
-                        r1[x, y] = r[0, 0]
-                        r1[x, y] = r[int(x2[0]), int(x2[1])]
-                        g1[x, y] = g[int(x2[0]), int(x2[1])]
-                        b1[x, y] = b[int(x2[0]), int(x2[1])]
-                return red, green, blue
+                        xn = ((2*x)+y) % size[0]
+                        yn = (x+y) % size[1]
+                        r1[x, y] = r[xn, yn]
+                        g1[x, y] = g[xn, yn]
+                        b1[x, y] = b[xn, yn]
+
+                return red1, green1, blue1
 
             except SystemError:
                 print("Image is probably neither grey scale nor 3-channel")
-            return list1
 
 
 if __name__ == '__main__':
-    file = '/home/anmol/PycharmProjects/pixipher/lena_color.png'
-    Encryption(file).encrypt_file()
+    file = '/home/anmol/PycharmProjects/pixipher/lena.png'
+    file2 = '/home/anmol/PycharmProjects/pixipher/lena_out2.png'
+    Encryption(file, outfile=file2, iteration=34).encrypt_file()
