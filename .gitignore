@@ -6,6 +6,7 @@
 *.c
 *.out
 *.m
+*.gif
 
 # This being specific
 browse.py
