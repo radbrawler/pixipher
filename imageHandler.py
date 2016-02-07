@@ -15,18 +15,18 @@ class ImageHandler:
                                                ("JPEG Files", "*.jpg")))
 
         print("Opened File: " + self.filename)
-        self.showImage()
+        self.showImage(self.filename)
         # mainWindow.MainWindow.enable_encryption(self.window)
 
         # print("Window object in ImageDialog function is", window)
         # print("Filename in image handler is", window.filename)
         window.update_filename(self.filename)
 
-    def showImage(self):
-        image = Image.open(self.filename)
+    def showImage(self, file_name, xi=10, yi=10):
+        image = Image.open(file_name)
         image.thumbnail(self.size, Image.ANTIALIAS)
         render = ImageTk.PhotoImage(image)
 
         img = Label(self.window, image=render)
         img.image = render
-        img.place(x=10, y=10)
+        img.place(x=xi, y=yi)
