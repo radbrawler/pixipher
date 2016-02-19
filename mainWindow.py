@@ -5,6 +5,7 @@ import sender
 import client
 import imageHandler
 import encryption
+import decryption
 
 
 class MainWindow(Frame):
@@ -34,15 +35,11 @@ class MainWindow(Frame):
         self.preferences = Menu(self.menu)  # Edit Menu
         self.preferences.add_command(label="Encrypt Image",
                                      command=lambda: encryption.Encryption(self.filename, window=app).encrypt_file())
-        self.preferences.add_command(label="Decrypt Image", command="")
+        self.preferences.add_command(label="Decrypt Image",
+                                     command=lambda: decryption.Decryption(self.filename, window=app).decrypt_file())
         self.preferences.add_command(label="Set Parameters", command="")
         self.menu.add_cascade(label="Preferences", menu=self.preferences)
         #self.disable_preferences()
-
-        self.connect = Menu(self.menu)  # Connect Menu
-        self.connect.add_command(label="Open Connection", command=self.open)
-        self.connect.add_command(label="Establish Connection", command=self.con)
-        self.menu.add_cascade(label="Connect", menu=self.connect)
 
         self.send = Menu(self.menu)  # Send Menu
         self.send.add_command(label="Send Image", command=self.send)
@@ -99,7 +96,7 @@ if __name__ == "__main__":
     root = Tk()
     logo = PhotoImage(file='icon4.png')
     root.tk.call('wm', 'iconphoto', root._w, logo)
-    root.geometry("800x400")
+    root.geometry("720x600")
     print("In Main Loop")
     app = MainWindow(root)
     print("App object is ", app)

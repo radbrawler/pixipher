@@ -5,11 +5,11 @@ from PIL import Image
 import imageHandler
 
 
-class Encryption:
+class Decryption:
     def __init__(self, filename, window=None, outfile="out.png", key="image_encryption".encode('utf-8'), iteration=1):
         self.filename = filename
         self.key = hashlib.sha256(key).digest()
-        # print("File opened for encryption is ", self.filename)
+        # print("File opened for decryption is ", self.filename)
         if outfile != "out.png":
             self.outfile = outfile
         else:
@@ -17,7 +17,7 @@ class Encryption:
         self.iteration = iteration
         self.window = window
 
-    def encrypt_file(self):
+    def decrypt_file(self):
         try:
             print("outfile is ", self.outfile)
             image = Image.open(self.filename)
@@ -161,9 +161,9 @@ class Encryption:
                             ki[x*size[0] + y] = int(((10 ** 14)*temp_ki[x*size[0] + y]) % 256)
                             # ki[x*size[0] + y] = int(os.urandom(1))
 
-                            r1[x, y] = (r[xn, yn] ^ ki[x*size[0]+y]) % 256
-                            g1[x, y] = (g[xn, yn] ^ ki[x*size[0]+y]) % 256
-                            b1[x, y] = (b[xn, yn] ^ ki[x*size[0]+y]) % 256
+                            r1[xn, yn] = (r[x, y] ^ ki[x*size[0]+y]) % 256
+                            g1[xn, yn] = (g[x, y] ^ ki[x*size[0]+y]) % 256
+                            b1[xn, yn] = (b[x, y] ^ ki[x*size[0]+y]) % 256
 
                     # for x in range(size[0]):
                     #     for y in range(size[1]):
@@ -192,10 +192,10 @@ if __name__ == '__main__':
 
     for i in range(1):
         print(i)
-        file = '/home/anmol/PycharmProjects/pixipher/output4/lena_color.png'
-        file2 = '/home/anmol/PycharmProjects/pixipher/output4/output2.png'
+        file = '/home/anmol/PycharmProjects/pixipher/output4/output2.png'
+        file2 = '/home/anmol/PycharmProjects/pixipher/output4/output3.png'
         # print(file, file2)
-        Encryption(file, outfile=file2, iteration=1).encrypt_file()
+        Decryption(file, outfile=file2, iteration=1).decrypt_file()
 
     # a = bitstring.BitArray(bin='00000100')
     #

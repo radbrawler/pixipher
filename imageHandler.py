@@ -22,7 +22,7 @@ class ImageHandler:
         # print("Filename in image handler is", window.filename)
         window.update_filename(self.filename)
 
-    def showImage(self, file_name, xi=10, yi=10):
+    def showImage(self, file_name, xi=40, yi=40):
         image = Image.open(file_name)
         image.thumbnail(self.size, Image.ANTIALIAS)
         render = ImageTk.PhotoImage(image)
