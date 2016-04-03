@@ -53,13 +53,21 @@ class MainWindow(Frame):
             self.menu.entryconfig("Preferences", state="normal")
             print("Menu Enabled")
 
-        # ***** Status Bar *****
-        self.status = Label(self, text=" Status Bar", bd=2, relief=SUNKEN, anchor=E)
+        # # ***** Status Bar *****
+        self.variable = StringVar()
+        self.status = Label(self, bd=1, relief=SUNKEN, anchor=E,
+                            textvariable=self.variable)
+        self.variable.set('Update text here ... !! Status Bar')
         self.status.pack(side=BOTTOM, fill=X)
 
     def update_filename(self, fname):
         print("Object in function is ", self, fname)
         self.filename = fname
+
+    # This function will update the statusBar by changing the VarString
+    # variable -> variable
+    def update_status_bar(self, string):
+        self.variable.set(string)
 
     @staticmethod
     def init_window():
@@ -94,11 +102,13 @@ class MainWindow(Frame):
 
 if __name__ == "__main__":
     root = Tk()
+
     logo = PhotoImage(file='icon4.png')
     root.tk.call('wm', 'iconphoto', root._w, logo)
-    root.geometry("720x600")
+    root.geometry("720x500")
     print("In Main Loop")
     app = MainWindow(root)
     print("App object is ", app)
     app.update_filename("anmol")
+
     root.mainloop()

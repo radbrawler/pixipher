@@ -17,6 +17,9 @@ class Encryption:
         self.iteration = iteration
         self.window = window
 
+        if self.window:
+            self.window.update_status_bar("Encrypting Image")
+
     def encrypt_file(self):
         try:
             print("outfile is ", self.outfile)
