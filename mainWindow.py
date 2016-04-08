@@ -28,7 +28,7 @@ class MainWindow(Frame):
         self.file = Menu(self.menu)
         self.file.add_command(label="Open", command=lambda: imageHandler.ImageHandler(app).openImageDialog(app))
         # file.add_command(label="Open", command=self.openImage)
-        self.file.add_command(label="Save As", command=self.save_image())
+        self.file.add_command(label="Save As", command=self.save_image)
         self.file.add_command(label="Exit", command=self.client_exit)
         self.menu.add_cascade(label="File", menu=self.file)
 
@@ -42,7 +42,7 @@ class MainWindow(Frame):
         #self.disable_preferences()
 
         self.send = Menu(self.menu)  # Send Menu
-        self.send.add_command(label="Send Image", command=self.send)
+        self.send.add_command(label="Send Image", command=self.send())
         self.send.add_command(label="Receive Image", command=self.rec)
         self.menu.add_cascade(label="Send", menu=self.send)
 
@@ -57,7 +57,7 @@ class MainWindow(Frame):
         self.variable = StringVar()
         self.status = Label(self, bd=1, relief=SUNKEN, anchor=E,
                             textvariable=self.variable)
-        self.variable.set('Update text here ... !! Status Bar')
+        self.variable.set('Status Bar')
         self.status.pack(side=BOTTOM, fill=X)
 
     def update_filename(self, fname):
@@ -73,8 +73,10 @@ class MainWindow(Frame):
     def init_window():
         print(" Initialising Main Window")
 
+    @staticmethod
     def send(self):
-        sender.Sender.send_image(self.filename)
+        print("In send")
+        sender.Sender(app, "localhost", 9999).send_image(self.filename)
 
     def rec(self):
         client.Client.recv_image()

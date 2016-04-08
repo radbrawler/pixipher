@@ -1,13 +1,27 @@
 import socket
+from tkinter import *
 
 
 class Sender:
-    def __init__(self, senderName, senderPort):
+    def __init__(self, parent, window, senderName, senderPort):
         self.senderName = senderName
         self.senderPort = senderPort
         print(self.senderName)
         print(self.senderPort)
         self.senderSocket = None
+        self.window = window
+
+        window.update_status("Sending Image")
+
+        top = self.top = Toplevel(parent)
+
+        Label(top, text="Value").pack()
+
+        self.e = Entry(top)
+        self.e.pack(padx=5)
+
+        b = Button(top, text="OK", command=self.ok)
+        b.pack(pady=5)
 
     def open_connection(self):
         self.senderSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

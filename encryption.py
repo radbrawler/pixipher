@@ -17,11 +17,10 @@ class Encryption:
         self.iteration = iteration
         self.window = window
 
-        if self.window:
-            self.window.update_status_bar("Encrypting Image")
-
     def encrypt_file(self):
         try:
+            if self.window:
+                self.window.update_status_bar("Encrypting Image")
             print("outfile is ", self.outfile)
             image = Image.open(self.filename)
             image_out = Image.new(image.mode, image.size, None)
@@ -84,6 +83,9 @@ class Encryption:
 
             else:
                 print("Image is neither \'L\' or \'RGB\'")
+
+            if self.window:
+                self.window.update_status_bar("Encryption Done")
 
         except IOError as e:
             print("File Name not Found", e)
