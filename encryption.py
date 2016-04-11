@@ -184,8 +184,8 @@ class Encryption:
                     # print("Scrambling Done")
                     # print(r1[10, 10], r[10, 10])
 
-                for t in range(100):
-                    print(ki[t])
+                # for t in range(100):
+                #     print(ki[t])
 
                 return red1, green1, blue1
 
@@ -197,8 +197,8 @@ if __name__ == '__main__':
 
     for i in range(1):
         print(i)
-        file = '/home/anmol/PycharmProjects/pixipher/output4/lena_color.png'
-        file2 = '/home/anmol/PycharmProjects/pixipher/output4/output2.png'
+        file = '/home/anmol/PycharmProjects/pixipher/lena1.png'
+        file2 = '/home/anmol/PycharmProjects/pixipher/output2.png'
         # print(file, file2)
         Encryption(file, outfile=file2, iteration=1).encrypt_file()
 

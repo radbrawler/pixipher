@@ -6,3 +6,4 @@ numpy
 scipy
 oct2py
 cv2
+tkinter

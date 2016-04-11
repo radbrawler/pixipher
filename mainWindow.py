@@ -32,7 +32,8 @@ class MainWindow(Frame):
         self.file.add_command(label="Exit", command=self.client_exit)
         self.menu.add_cascade(label="File", menu=self.file)
 
-        self.preferences = Menu(self.menu)  # Edit Menu
+        # Edit Menu
+        self.preferences = Menu(self.menu)
         self.preferences.add_command(label="Encrypt Image",
                                      command=lambda: encryption.Encryption(self.filename, window=app).encrypt_file())
         self.preferences.add_command(label="Decrypt Image",
@@ -41,8 +42,9 @@ class MainWindow(Frame):
         self.menu.add_cascade(label="Preferences", menu=self.preferences)
         #self.disable_preferences()
 
-        self.send = Menu(self.menu)  # Send Menu
-        self.send.add_command(label="Send Image", command=self.send())
+        # Send Menu
+        self.send = Menu(self.menu)
+        self.send.add_command(label="Send Image", command=self.send)
         self.send.add_command(label="Receive Image", command=self.rec)
         self.menu.add_cascade(label="Send", menu=self.send)
 
@@ -59,6 +61,11 @@ class MainWindow(Frame):
                             textvariable=self.variable)
         self.variable.set('Status Bar')
         self.status.pack(side=BOTTOM, fill=X)
+
+        # ----------------------
+        # Sockets Initialization
+        # ----------------------
+        self.sock = sender.Sender()
 
     def update_filename(self, fname):
         print("Object in function is ", self, fname)
