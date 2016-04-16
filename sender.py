@@ -1,48 +1,79 @@
+import json
 import socket
-from tkinter import *
+from tkinter import messagebox
+import threading
+import tkinter
 
 
 class Sender:
     def __init__(self, parent, window, senderName, senderPort):
-        self.senderName = senderName
-        self.senderPort = senderPort
-        print(self.senderName)
-        print(self.senderPort)
-        self.senderSocket = None
+        self.sender_name = senderName
+        self.sender_port = senderPort
+        print(self.sender_name)
+        print(self.sender_port)
+        self.sender_socket = None
         self.window = window
 
-        window.update_status("Sending Image")
+        window.update_status_bar("Sending Image")
 
-        top = self.top = Toplevel(parent)
+        threading.Thread(target=self.listen, args=[self]).start()
 
-        Label(top, text="Value").pack()
+        # b = Button(top, text="OK", command=self.ok)
+        # b.pack(pady=5)
 
-        self.e = Entry(top)
-        self.e.pack(padx=5)
-
-        b = Button(top, text="OK", command=self.ok)
-        b.pack(pady=5)
-
-    def open_connection(self):
-        self.senderSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.senderSocket.bind((self.senderName, self.senderPort))
-        print(" Sender port open Name:" + self.senderName + " Port:" + str(self.senderPort))
-        self.senderSocket.listen(5)
+    @staticmethod
+    def listen(self):
+        self.sender_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sender_socket.bind((self.sender_name, self.sender_port))
+        print(" Sender port open Name:" + self.sender_name + " Port:" + str(self.sender_port))
+        self.sender_socket.listen(5)
         print("Listening ....")
-        clientSocket, clientAddress = self.senderSocket.accept()
-        print("Connected to - ", clientSocket, clientAddress)
+        while True:
+            client_socket, client_address = self.sender_socket.accept()
+            print("Connection Received from", client_address, ". Do you want to accept connection .??")
+            config = json.load(open("config.json", encoding='utf-8'))
+            connection_choice = str(config["connection_choice"])
+            print(connection_choice)
+            if connection_choice == "True":
+                client_socket.settimeout(60)
+                tkinter.messagebox.showinfo("info", "message")
+                print("Connected to - ", client_socket, client_address)
+                print("Receiving")
+                s = open('torecv.png', 'wb')
+                size = 1024
+                l = client_socket.recv(size)
+                print(l)
+                while l:
+                    if str(l) == "request_connection":
+                        print("Connection Accepted")
+                        self.connection_request()
+                    elif str(l) == "sending file":
+                        print("Remote sending Files")
+                        pass
+                    l = client_socket.recv(size)
+                    print(l)
+                s.close()
+                client_socket.send(bytearray("Thanks for Connecting !!", 'utf-8'))
+
+            elif connection_choice == "False":
+                print("Connection rejected from ", client_address)
+                client_socket.send(bytearray("Connection Rejected from server side " + str(self.sender_socket),
+                                             encoding='utf-8'))
+                client_socket.close()
+
+        print("Disconnected")
 
     def send_image(self, image):
-        self.senderSocket.send(image)
+        self.sender_socket.send(image)
         f = open(image, 'rb')
-        print ("Sending ... ")
+        print("Sending ... ")
         l = f.read(1024)
         while(1):
             print("Sending ... ")
-            self.senderSocket.send(1)
+            self.sender_socket.send(1)
             l = f.read(1024)
 
         f.close()
         print("Done Sending ... ")
-        print(self.senderSocket.recv(1024))
+        print(self.sender_socket.recv(1024))
 

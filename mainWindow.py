@@ -1,3 +1,4 @@
+import json
 from tkinter import *
 import sys
 
@@ -11,6 +12,8 @@ import decryption
 class MainWindow(Frame):
     def __init__(self, master=None):
 
+        self.init_config_json()
+
         print(sys.path)
         Frame.__init__(self, master)
         self.master = master
@@ -23,6 +26,16 @@ class MainWindow(Frame):
         self.pack(fill=BOTH, expand=1)
         self.menu = Menu(self.master)
         self.master.config(menu=self.menu)
+
+        # # ***** Status Bar *****
+        self.variable = StringVar()
+        self.status = Label(self, bd=1, relief=SUNKEN, anchor=E,
+                            textvariable=self.variable)
+        self.variable.set('Status Bar')
+        self.status.pack(side=BOTTOM, fill=X)
+
+        print(type(self.master))
+        self.s = sender.Sender(self.master, self, "localhost", 39999)
 
         # File Menu
         self.file = Menu(self.menu)
@@ -44,7 +57,8 @@ class MainWindow(Frame):
 
         # Send Menu
         self.send = Menu(self.menu)
-        self.send.add_command(label="Send Image", command=self.send)
+        # self.send.add_command(label="Send Image", command=sender.Sender(self.master, self, "localhost", 9999)
+        #                       .send_image(image=self.filename))
         self.send.add_command(label="Receive Image", command=self.rec)
         self.menu.add_cascade(label="Send", menu=self.send)
 
@@ -55,21 +69,22 @@ class MainWindow(Frame):
             self.menu.entryconfig("Preferences", state="normal")
             print("Menu Enabled")
 
-        # # ***** Status Bar *****
-        self.variable = StringVar()
-        self.status = Label(self, bd=1, relief=SUNKEN, anchor=E,
-                            textvariable=self.variable)
-        self.variable.set('Status Bar')
-        self.status.pack(side=BOTTOM, fill=X)
-
         # ----------------------
         # Sockets Initialization
         # ----------------------
-        self.sock = sender.Sender()
+        # self.sock = sender.Sender()
 
-    def update_filename(self, fname):
-        print("Object in function is ", self, fname)
-        self.filename = fname
+    @staticmethod
+    def init_config_json():
+        file = open("config.json", "w")
+        config = {
+            "encryption_parameter": "3.75",
+            "server_host": "9999",
+            "server_port": "localhost",
+            "connection_choice": "True"
+        }
+        file.write(json.dumps(config, indent=4))
+        file.close()
 
     # This function will update the statusBar by changing the VarString
     # variable -> variable
@@ -83,7 +98,7 @@ class MainWindow(Frame):
     @staticmethod
     def send(self):
         print("In send")
-        sender.Sender(app, "localhost", 9999).send_image(self.filename)
+        sender.Sender(app, app, "localhost", 9999).send_image(self.filename)
 
     def rec(self):
         client.Client.recv_image()
@@ -104,10 +119,6 @@ class MainWindow(Frame):
     def client_exit():
         exit()
 
-    # def enable_encryption(self):
-
-    # def disable_preferences(self):
-
 
 if __name__ == "__main__":
     root = Tk()
@@ -115,9 +126,6 @@ if __name__ == "__main__":
     logo = PhotoImage(file='icon4.png')
     root.tk.call('wm', 'iconphoto', root._w, logo)
     root.geometry("720x500")
-    print("In Main Loop")
-    app = MainWindow(root)
-    print("App object is ", app)
-    app.update_filename("anmol")
+    app = MainWindow(master=root)
 
     root.mainloop()

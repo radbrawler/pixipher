@@ -1,4 +1,5 @@
 import hashlib
+import json
 
 from PIL import Image
 
@@ -147,7 +148,9 @@ class Encryption:
                 g1 = green1.load()
                 b1 = blue1.load()
 
-                q = 3.75
+                read_file = open("config.json", encoding='utf-8')
+                parameters = json.load(read_file)
+                q = float((parameters["encryptionParameter"]))
 
                 def h(l): return q*l*(1-l)
                 temp_ki = [None]*(size[0]*size[1]+1)
