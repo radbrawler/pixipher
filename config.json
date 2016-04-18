@@ -1,6 +1,6 @@
 {
+    "server_host": "localhost",
+    "server_port": "19999",
     "connection_choice": "True",
-    "encryption_parameter": "3.75",
-    "server_port": "localhost",
-    "server_host": "9999"
+    "encryption_parameter": "3.75"
 }

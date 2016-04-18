@@ -1,6 +1,6 @@
 import json
 import socket
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 import threading
 import tkinter
 
@@ -44,16 +44,12 @@ class Sender:
                 l = client_socket.recv(size)
                 print(l)
                 while l:
-                    if str(l) == "request_connection":
-                        print("Connection Accepted")
-                        self.connection_request()
-                    elif str(l) == "sending file":
-                        print("Remote sending Files")
-                        pass
+                    s.write(l)
                     l = client_socket.recv(size)
                     print(l)
+
                 s.close()
-                client_socket.send(bytearray("Thanks for Connecting !!", 'utf-8'))
+                client_socket.close()
 
             elif connection_choice == "False":
                 print("Connection rejected from ", client_address)
@@ -63,17 +59,23 @@ class Sender:
 
         print("Disconnected")
 
-    def send_image(self, image):
-        self.sender_socket.send(image)
+    @staticmethod
+    def send_image(self, master, image):
+        dest_host = simpledialog.askstring("Destination Host", "Enter Destination Host name")
+        dest_port = simpledialog.askinteger("Destination Port", "Enter Destination Port name")
+        client_socket = socket.socket()
+        client_socket.connect((dest_host, dest_port))
+        print("Connected to" + str(dest_port))
         f = open(image, 'rb')
         print("Sending ... ")
         l = f.read(1024)
-        while(1):
+        while l:
             print("Sending ... ")
-            self.sender_socket.send(1)
+            client_socket.send(l)
             l = f.read(1024)
 
         f.close()
         print("Done Sending ... ")
-        print(self.sender_socket.recv(1024))
+        print(client_socket.recv(1024))
+        client_socket.close()
 

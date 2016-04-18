@@ -150,7 +150,7 @@ class Encryption:
 
                 read_file = open("config.json", encoding='utf-8')
                 parameters = json.load(read_file)
-                q = float((parameters["encryptionParameter"]))
+                q = float((parameters["encryption_parameter"]))
 
                 def h(l): return q*l*(1-l)
                 temp_ki = [None]*(size[0]*size[1]+1)

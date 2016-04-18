@@ -35,7 +35,10 @@ class MainWindow(Frame):
         self.status.pack(side=BOTTOM, fill=X)
 
         print(type(self.master))
-        self.s = sender.Sender(self.master, self, "localhost", 39999)
+        config = json.load(open("config.json", encoding='utf-8'))
+        port = int(str(config["server_port"]))
+        self.s = sender.Sender(self.master, self, "localhost", port)
+        self.master.title("Pixipher running on " + str(port))
 
         # File Menu
         self.file = Menu(self.menu)
@@ -57,9 +60,8 @@ class MainWindow(Frame):
 
         # Send Menu
         self.send = Menu(self.menu)
-        # self.send.add_command(label="Send Image", command=sender.Sender(self.master, self, "localhost", 9999)
-        #                       .send_image(image=self.filename))
-        self.send.add_command(label="Receive Image", command=self.rec)
+        self.send.add_command(label="Send Image", command=self.send_im)
+        # self.send.add_command(label="Receive Image", command=self.rec)
         self.menu.add_cascade(label="Send", menu=self.send)
 
         if self.filename is None:
@@ -79,12 +81,16 @@ class MainWindow(Frame):
         file = open("config.json", "w")
         config = {
             "encryption_parameter": "3.75",
-            "server_host": "9999",
-            "server_port": "localhost",
+            "server_host": "localhost",
+            "server_port": "19999",
             "connection_choice": "True"
         }
         file.write(json.dumps(config, indent=4))
         file.close()
+
+    def update_filename(self, fname):
+        print("Object in function is ", self, fname)
+        self.filename = fname
 
     # This function will update the statusBar by changing the VarString
     # variable -> variable
@@ -95,13 +101,9 @@ class MainWindow(Frame):
     def init_window():
         print(" Initialising Main Window")
 
-    @staticmethod
-    def send(self):
+    def send_im(self):
         print("In send")
-        sender.Sender(app, app, "localhost", 9999).send_image(self.filename)
-
-    def rec(self):
-        client.Client.recv_image()
+        self.s.send_image(self, self.master, self.filename)
 
     @staticmethod
     def open():

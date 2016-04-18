@@ -24,6 +24,11 @@ class ImageHandler:
 
     def showImage(self, file_name, xi=40, yi=40):
         image = Image.open(file_name)
+        try:
+            image.load()
+        except IOError:
+            pass # You can always log it to logger
+
         image.thumbnail(self.size, Image.ANTIALIAS)
         render = ImageTk.PhotoImage(image)
 
