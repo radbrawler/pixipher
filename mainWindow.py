@@ -87,7 +87,7 @@ class MainWindow(Frame):
         host = str(socket.gethostname())
         config = {
             "server_host": host,
-            "server_port": "18999",
+            "server_port": "28999",
             "connection_choice": "True",
             "parameter_arnold": "3.75",
             "parameter_temp_ki": "0.46",

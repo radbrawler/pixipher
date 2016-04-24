@@ -49,14 +49,16 @@ class Sender:
                 size = 1024
                 l = client_socket.recv(size)
                 # print(l)
-                while l:
+                while True:
                     s.write(l)
                     l = client_socket.recv(size)
+                    if not l:
+                        break
                     # print(l)
 
                 s.close()
                 tkinter.messagebox.showinfo("Info", "Image saved at " + str(os.path)+"/"+self.recv_filename +
-                                            "\n Closing connection with remote client " + client_address)
+                                            "\n Closing connection with remote client " + str(client_address))
                 client_socket.close()
 
             elif connection_choice == "False":
@@ -86,6 +88,5 @@ class Sender:
 
         f.close()
         print("Done Sending ... ")
-        print(client_socket.recv(1024))
         client_socket.close()
 
