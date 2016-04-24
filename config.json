@@ -1,9 +1,9 @@
 {
-    "server_host": "localhost",
-    "parameter_temp_ki": "0.46",
     "parameter_arnold": "3.75",
     "connection_choice": "True",
-    "parameter_v": "3",
+    "parameter_temp_ki": "0.46",
     "parameter_u": "2",
-    "server_port": "19999"
+    "server_host": "radbrawler",
+    "server_port": "18999",
+    "parameter_v": "3"
 }

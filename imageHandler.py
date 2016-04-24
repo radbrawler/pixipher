@@ -15,14 +15,14 @@ class ImageHandler:
                                                ("JPEG Files", "*.jpg")))
 
         print("Opened File: " + self.filename)
-        self.showImage(self.filename)
+        self.showImage(self.filename, erase=True)
         # mainWindow.MainWindow.enable_encryption(self.window)
 
         # print("Window object in ImageDialog function is", window)
         # print("Filename in image handler is", window.filename)
         window.update_filename(self.filename)
 
-    def showImage(self, file_name, xi=40, yi=40, erase=True):
+    def showImage(self, file_name, xi=40, yi=40, erase=False):
         image = Image.open(file_name)
         try:
             image.load()
@@ -31,8 +31,15 @@ class ImageHandler:
 
         if erase:
             print("In erase func")
-            w = tk.Canvas(self.window, width=self.window.winfo_width(), height=self.window.winfo_height())
-            w.pack()
+            im_blank = Image.open("blank.png")
+            im_blank.load()
+
+            im_blank.thumbnail([850, 800], Image.ANTIALIAS)
+            render2 = ImageTk.PhotoImage(im_blank)
+
+            img_2 = tk.Label(self.window, image=render2)
+            img_2.image = render2
+            img_2.place(x=0, y=0)
 
         image.thumbnail(self.size, Image.ANTIALIAS)
         render = ImageTk.PhotoImage(image)
@@ -40,8 +47,3 @@ class ImageHandler:
         img = tk.Label(self.window, image=render)
         img.image = render
         img.place(x=xi, y=yi)
-
-        w = tk.Canvas(self.window, width=self.window.winfo_width(), height=self.window.winfo_height())
-        w.create_rectangle(0, 0, self.window.winfo_width(), self.window.winfo_height())
-        w.pack()
-

@@ -1,4 +1,5 @@
 import json
+import socket
 from tkinter import *
 import sys
 
@@ -18,6 +19,7 @@ class MainWindow(Frame):
         Frame.__init__(self, master)
         self.master = master
         self.filename = None
+        self.s = None
 
         # print("Self Object is", self)
         # print("Master Object is", master)
@@ -35,11 +37,11 @@ class MainWindow(Frame):
         self.status.pack(side=BOTTOM, fill=X)
 
         print(type(self.master))
-        config = json.load(open("config.json", encoding='utf-8'))
-        host = str(config["server_host"])
-        port = int(str(config["server_port"]))
-        self.s = sender.Sender(self.master, self, host, port)
-        self.master.title("Pixipher running on " + str(port))
+        # config = json.load(open("config.json", encoding='utf-8'))
+        # host = str(config["server_host"])
+        # port = int(str(config["server_port"]))
+        # self.s = sender.Sender(self.master, self, host, port)
+        # self.master.title("Pixipher running on " + str(port))
 
         # File Menu
         self.file = Menu(self.menu)
@@ -63,6 +65,7 @@ class MainWindow(Frame):
         # Send Menu
         self.send = Menu(self.menu)
         self.send.add_command(label="Send Image", command=self.send_im)
+        self.send.add_command(label="Receive Image", command=self.receive_im)
         # self.send.add_command(label="Receive Image", command=self.rec)
         self.menu.add_cascade(label="Send", menu=self.send)
 
@@ -81,9 +84,10 @@ class MainWindow(Frame):
     @staticmethod
     def init_config_json():
         file = open("config.json", "w")
+        host = str(socket.gethostname())
         config = {
-            "server_host": "localhost",
-            "server_port": "19999",
+            "server_host": host,
+            "server_port": "18999",
             "connection_choice": "True",
             "parameter_arnold": "3.75",
             "parameter_temp_ki": "0.46",
@@ -121,7 +125,18 @@ class MainWindow(Frame):
 
     def send_im(self):
         print("In send")
-        self.s.send_image(self, self.master, self.filename)
+        config = json.load(open("config.json", encoding='utf-8'))
+        host = str(config["server_host"])
+        port = int(str(config["server_port"]))
+        w = sender.Sender(self.master, self, host, port)
+        w.send_image(self, self.master, self.filename)
+
+    def receive_im(self):
+        print("In receive Image")
+        config = json.load(open("config.json", encoding='utf-8'))
+        host = str(config["server_host"])
+        port = int(str(config["server_port"]))
+        self.s = sender.Sender(self.master, self, host, port)
 
     @staticmethod
     def open():

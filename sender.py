@@ -7,13 +7,15 @@ import tkinter
 
 
 class Sender:
-    def __init__(self, parent, window, senderName, senderPort):
+    def __init__(self, parent, window, senderName, senderPort, recv="received.png"):
         self.sender_name = senderName
         self.sender_port = senderPort
         print(self.sender_name)
         print(self.sender_port)
         self.sender_socket = None
         self.window = window
+        self.recv_filename = recv
+        self.timeout = 10
 
         window.update_status_bar("Sending Image")
 
@@ -28,29 +30,33 @@ class Sender:
         self.sender_socket.bind((self.sender_name, self.sender_port))
         print(" Sender port open Name:" + self.sender_name + " Port:" + str(self.sender_port))
         self.sender_socket.listen(5)
+        # tkinter.messagebox.showinfo("Info", "Client running on " + self.sender_name+":"+str(self.sender_port))
         print("Listening ....")
+        flag = True
         while True:
             client_socket, client_address = self.sender_socket.accept()
             print("Connection Received from", client_address, ". Do you want to accept connection .??")
             config = json.load(open("config.json", encoding='utf-8'))
             connection_choice = str(config["connection_choice"])
             print(connection_choice)
-            recv_filename = "received.png"
+
             if connection_choice == "True":
-                client_socket.settimeout(60)
-                tkinter.messagebox.showinfo("Info", "Image saved at " + str(os.path)+"/"+recv_filename)
+                client_socket.settimeout(self.timeout)
                 print("Connected to - ", client_socket, client_address)
+                flag = False
                 print("Receiving")
-                s = open(recv_filename, 'wb')
+                s = open(self.recv_filename, 'wb')
                 size = 1024
                 l = client_socket.recv(size)
-                print(l)
+                # print(l)
                 while l:
                     s.write(l)
                     l = client_socket.recv(size)
-                    print(l)
+                    # print(l)
 
                 s.close()
+                tkinter.messagebox.showinfo("Info", "Image saved at " + str(os.path)+"/"+self.recv_filename +
+                                            "\n Closing connection with remote client " + client_address)
                 client_socket.close()
 
             elif connection_choice == "False":
@@ -59,13 +65,15 @@ class Sender:
                                              encoding='utf-8'))
                 client_socket.close()
 
+        self.sender_socket.shutdown(socket.SHUT_RDWR)
+        self.sender_socket.close()
         print("Disconnected")
 
     @staticmethod
     def send_image(self, master, image):
         dest_host = simpledialog.askstring("Destination Host", "Enter Destination Host name")
         dest_port = simpledialog.askinteger("Destination Port", "Enter Destination Port name")
-        client_socket = socket.socket()
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect((dest_host, dest_port))
         print("Connected to" + str(dest_port))
         f = open(image, 'rb')
