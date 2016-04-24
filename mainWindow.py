@@ -46,8 +46,8 @@ class MainWindow(Frame):
         # File Menu
         self.file = Menu(self.menu)
         self.file.add_command(label="Open", command=lambda: imageHandler.ImageHandler(app).openImageDialog(app))
-        # file.add_command(label="Open", command=self.openImage)
-        self.file.add_command(label="Image Properties", command=self.properties)
+        # file.add_command(label="Open", command=self.openImage)1
+        # self.file.add_command(label="Image Properties", command=self.properties)
         self.file.add_command(label="Exit", command=self.master.destroy)
         self.menu.add_cascade(label="File", menu=self.file)
 
