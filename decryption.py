@@ -1,4 +1,6 @@
 import hashlib
+import json
+import tkinter as tk
 
 from PIL import Image
 
@@ -19,6 +21,67 @@ class Decryption:
 
     def decrypt_file(self):
         try:
+            param1 = ""
+            read_file = open("config.json", "r", encoding='utf-8')
+            parameters = json.load(read_file)  # parameters is a dict variable
+            read_file.close()
+
+            pop_up = tk.Toplevel()
+            pop_up.title("Decryption Parameters")
+            border = 3
+            label1 = tk.Label(pop_up, text="Parameter (q)")
+            p_arnold = tk.Entry(pop_up, bd=border)
+            p_arnold.insert(0, str(parameters["parameter_arnold"]))
+
+            label2 = tk.Label(pop_up, text="System Initial Value (w)")
+            p_temp_ki = tk.Entry(pop_up, bd=border)
+            p_temp_ki.insert(0, parameters["parameter_temp_ki"])
+
+            label3 = tk.Label(pop_up, text="Arnold Map Value (a)")
+            p_u = tk.Entry(pop_up, bd=border)
+            p_u.insert(0, parameters["parameter_u"])
+
+            label4 = tk.Label(pop_up, text="Arnold Map Value (b)")
+            p_v = tk.Entry(pop_up, bd=border)
+            p_v.insert(0, parameters["parameter_v"])
+
+            def get_parameters():
+
+                print(" In get param ")
+
+                param_dict = {"parameter_v": p_v.get(), "parameter_u": p_u.get(),
+                              "parameter_arnold": p_arnold.get(), "parameter_temp_ki": p_temp_ki.get()}
+
+                parameters.update(param_dict)
+                write_file = open("config.json", "w", encoding='utf-8')
+                write_file.write(json.dumps(parameters, indent=4))
+
+                print(p_arnold.get())
+                print(p_temp_ki.get())
+                print(p_u.get())
+                print(p_v.get())
+                pop_up.destroy()
+
+            def get_default():
+                print(" In get def")
+                pop_up.destroy()
+
+            submit = tk.Button(pop_up, text="Submit", command=get_parameters)
+            default = tk.Button(pop_up, text="Use Default Values", command=get_default)
+
+            label1.pack()
+            p_arnold.pack()
+            label2.pack()
+            p_temp_ki.pack()
+            label3.pack()
+            p_u.pack()
+            label4.pack()
+            p_v.pack()
+            submit.pack(side=tk.BOTTOM)
+            default.pack(side=tk.BOTTOM)
+
+            self.window.wait_window(window=pop_up)
+
             print("outfile is ", self.outfile)
             image = Image.open(self.filename)
             image_out = Image.new(image.mode, image.size, None)
@@ -103,13 +166,17 @@ class Decryption:
                 temp_ki = [None]*(size[0]*size[1]+1)
                 print(size[0]*size[1] + 1)
                 ki = [None]*size[0]*size[1]
+
+                # Decryption Parameters
                 temp_ki[0] = 0.46
+                a = 1
+                b = 2
 
                 for m in range(self.iteration):
                     # print(m)
                     for x in range(size[0]):
                         for y in range(size[1]):
-                            xn = (x+y) % size[0]
+                            xn = (x+(a*y)) % size[0]
                             yn = ((2*x)+(3*y)) % size[1]
 
                             temp_ki[x*size[0] + y + 1] = h(temp_ki[x*size[0] + y])
@@ -142,20 +209,28 @@ class Decryption:
                 g1 = green1.load()
                 b1 = blue1.load()
 
-                q = 3.75
+                read_file = open("config.json", encoding='utf-8')
+                parameters = json.load(read_file)
+                q = float((parameters["parameter_arnold"]))
 
                 def h(l): return q*l*(1-l)
                 temp_ki = [None]*(size[0]*size[1]+1)
                 print(size[0]*size[1] + 1)
                 ki = [None]*size[0]*size[1]
-                temp_ki[0] = 0.46
+
+                # Decryption parameter
+                temp_ki[0] = float((parameters["parameter_temp_ki"]))
+                u = int((parameters["parameter_u"]))
+                v = int((parameters["parameter_v"]))
+
+                read_file.close()
 
                 for m in range(self.iteration):
                     # print(m)
                     for x in range(size[0]):
                         for y in range(size[1]):
-                            xn = ((2*x)+y) % size[0]
-                            yn = (x+y) % size[1]
+                            xn = ((((u*v)+1)*x)+(v*y)) % size[0]
+                            yn = ((u*x)+y) % size[1]
                             # print(x*size[0] + y + 1)
                             temp_ki[x*size[0] + y + 1] = h(temp_ki[x*size[0] + y])
                             ki[x*size[0] + y] = int(((10 ** 14)*temp_ki[x*size[0] + y]) % 256)

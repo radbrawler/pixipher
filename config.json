@@ -1,6 +1,9 @@
 {
     "server_host": "localhost",
-    "server_port": "19999",
+    "parameter_temp_ki": "0.46",
+    "parameter_arnold": "3.75",
     "connection_choice": "True",
-    "encryption_parameter": "3.75"
+    "parameter_v": "3",
+    "parameter_u": "2",
+    "server_port": "19999"
 }

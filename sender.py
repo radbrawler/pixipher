@@ -1,4 +1,5 @@
 import json
+import os
 import socket
 from tkinter import messagebox, simpledialog
 import threading
@@ -34,12 +35,13 @@ class Sender:
             config = json.load(open("config.json", encoding='utf-8'))
             connection_choice = str(config["connection_choice"])
             print(connection_choice)
+            recv_filename = "received.png"
             if connection_choice == "True":
                 client_socket.settimeout(60)
-                tkinter.messagebox.showinfo("info", "message")
+                tkinter.messagebox.showinfo("Info", "Image saved at " + str(os.path)+"/"+recv_filename)
                 print("Connected to - ", client_socket, client_address)
                 print("Receiving")
-                s = open('torecv.png', 'wb')
+                s = open(recv_filename, 'wb')
                 size = 1024
                 l = client_socket.recv(size)
                 print(l)

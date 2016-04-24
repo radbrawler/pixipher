@@ -36,8 +36,9 @@ class MainWindow(Frame):
 
         print(type(self.master))
         config = json.load(open("config.json", encoding='utf-8'))
+        host = str(config["server_host"])
         port = int(str(config["server_port"]))
-        self.s = sender.Sender(self.master, self, "localhost", port)
+        self.s = sender.Sender(self.master, self, host, port)
         self.master.title("Pixipher running on " + str(port))
 
         # File Menu
@@ -45,7 +46,8 @@ class MainWindow(Frame):
         self.file.add_command(label="Open", command=lambda: imageHandler.ImageHandler(app).openImageDialog(app))
         # file.add_command(label="Open", command=self.openImage)
         self.file.add_command(label="Save As", command=self.save_image)
-        self.file.add_command(label="Exit", command=self.client_exit)
+        self.file.add_command(label="Image Properties", command=self.properties)
+        self.file.add_command(label="Exit", command=self.master.destroy)
         self.menu.add_cascade(label="File", menu=self.file)
 
         # Edit Menu
@@ -80,10 +82,13 @@ class MainWindow(Frame):
     def init_config_json():
         file = open("config.json", "w")
         config = {
-            "encryption_parameter": "3.75",
             "server_host": "localhost",
             "server_port": "19999",
-            "connection_choice": "True"
+            "connection_choice": "True",
+            "parameter_arnold": "3.75",
+            "parameter_temp_ki": "0.46",
+            "parameter_u": "2",
+            "parameter_v": "3",
         }
         file.write(json.dumps(config, indent=4))
         file.close()
@@ -96,6 +101,19 @@ class MainWindow(Frame):
     # variable -> variable
     def update_status_bar(self, string):
         self.variable.set(string)
+
+    @staticmethod
+    def properties(self):
+        top_level = Toplevel()
+        img = Image.open(self.filename)
+        print(img)
+        display_text = "This is text \n" \
+                    "with \n\n\n\nnewline chars" \
+                    "inserted in between"
+        label1 = Label(top_level, text=display_text, width=40)
+        label1.pack()
+        button = Button(top_level, text="OK", command=top_level.destroy)
+        button.pack()
 
     @staticmethod
     def init_window():

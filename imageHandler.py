@@ -1,5 +1,5 @@
 from tkinter.filedialog import askopenfilename
-from tkinter import *
+import tkinter as tk
 
 from PIL import Image, ImageTk
 
@@ -22,16 +22,26 @@ class ImageHandler:
         # print("Filename in image handler is", window.filename)
         window.update_filename(self.filename)
 
-    def showImage(self, file_name, xi=40, yi=40):
+    def showImage(self, file_name, xi=40, yi=40, erase=True):
         image = Image.open(file_name)
         try:
             image.load()
         except IOError:
             pass # You can always log it to logger
 
+        if erase:
+            print("In erase func")
+            w = tk.Canvas(self.window, width=self.window.winfo_width(), height=self.window.winfo_height())
+            w.pack()
+
         image.thumbnail(self.size, Image.ANTIALIAS)
         render = ImageTk.PhotoImage(image)
 
-        img = Label(self.window, image=render)
+        img = tk.Label(self.window, image=render)
         img.image = render
         img.place(x=xi, y=yi)
+
+        w = tk.Canvas(self.window, width=self.window.winfo_width(), height=self.window.winfo_height())
+        w.create_rectangle(0, 0, self.window.winfo_width(), self.window.winfo_height())
+        w.pack()
+
