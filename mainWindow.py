@@ -47,7 +47,6 @@ class MainWindow(Frame):
         self.file = Menu(self.menu)
         self.file.add_command(label="Open", command=lambda: imageHandler.ImageHandler(app).openImageDialog(app))
         # file.add_command(label="Open", command=self.openImage)
-        self.file.add_command(label="Save As", command=self.save_image)
         self.file.add_command(label="Image Properties", command=self.properties)
         self.file.add_command(label="Exit", command=self.master.destroy)
         self.menu.add_cascade(label="File", menu=self.file)
@@ -58,7 +57,6 @@ class MainWindow(Frame):
                                      command=lambda: encryption.Encryption(self.filename, window=app).encrypt_file())
         self.preferences.add_command(label="Decrypt Image",
                                      command=lambda: decryption.Decryption(self.filename, window=app).decrypt_file())
-        self.preferences.add_command(label="Set Parameters", command="")
         self.menu.add_cascade(label="Preferences", menu=self.preferences)
         #self.disable_preferences()
 
