@@ -25,3 +25,5 @@ output
 output2
 output3
 
+# Don't ignore these
+!blank.png
