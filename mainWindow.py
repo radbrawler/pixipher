@@ -86,8 +86,8 @@ class MainWindow(Frame):
         file = open("config.json", "w")
         host = str(socket.gethostname())
         config = {
-            "server_host": host,
-            "server_port": "28999",
+            "server_host": "192.168.43.50",
+            "server_port": "18999",
             "connection_choice": "True",
             "parameter_arnold": "3.75",
             "parameter_temp_ki": "0.46",

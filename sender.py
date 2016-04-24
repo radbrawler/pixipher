@@ -57,7 +57,7 @@ class Sender:
                     # print(l)
 
                 s.close()
-                tkinter.messagebox.showinfo("Info", "Image saved at " + str(os.path)+"/"+self.recv_filename +
+                tkinter.messagebox.showinfo("Info", "Image saved at " + str(os.getcwd())+"/"+self.recv_filename +
                                             "\n Closing connection with remote client " + str(client_address))
                 client_socket.close()
 
